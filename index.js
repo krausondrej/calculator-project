@@ -125,6 +125,7 @@ function equalCalculations() {
 
 clear.click(function (e) {
   e.preventDefault();
+  
   currentNumber = "";
   result = "";
   operator = "";
@@ -146,9 +147,15 @@ $("#sign").click(function (e) {
   e.preventDefault();
 
   if (currentNumber !== "") {
-    isNegative = !isNegative;
-    currentNumber = isNegative ? "-" + currentNumber : currentNumber.replace("-", "");
+    currentNumber = -1 * currentNumber
     displayNumber.text(currentNumber);
   }
+  if (result !== "") {
+    result = -1 * result
+    displayNumber.text(result);
+  }
 });
+
+
+
 
