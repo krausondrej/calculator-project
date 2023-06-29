@@ -12,10 +12,9 @@ const addition = $("#addition");
 const equal = $("#equals");
 const subtraction = $("#substracion");
 const clear = $("#clear");
-const decimal = $("#decimal")
-const percent = $("#percent")
-const multiplication = $("#multiplication")
-const division = $("#division")
+const decimal = $("#decimal");
+const multiplication = $("#multiplication");
+const division = $("#division");
 const displayNumber = $(".number-display-some");
 
 const numberButtons = [
@@ -25,108 +24,131 @@ const numberButtons = [
 ];
 
 let operator = "";
-let result = 0;
-let currentNumber = 0;
+let result = "";
+let currentNumber = "";
+let isNegative = false;
 
 numberButtons.forEach((button, index) => {
-  button.click(function(e) {
+  button.click(function (e) {
     e.preventDefault();
-
-    if (currentNumber < 100000000) {
-      currentNumber = currentNumber * 10 + index;
+    if (operator === "") {
+      result = ""
+    }
+    if (currentNumber.length < 9) {
+      currentNumber += index;
       displayNumber.text(currentNumber);
 
-      if (currentNumber > 999999) {
+      if (currentNumber.length > 6) {
         displayNumber.css('font-size', '60px');
+      } else if (currentNumber.length < 6) {
+        displayNumber.css('font-size', '70px');
       }
     }
   });
 });
 
-equal.click(function(e) {
+decimal.click(function (e) {
   e.preventDefault();
-  equalCalcualtions();
+  if (!currentNumber.includes('.') && currentNumber !== "") {
+    currentNumber += '.';
+    displayNumber.text(currentNumber);
+    }
+});
+
+equal.click(function (e) {
+  e.preventDefault();
+  equalCalculations();
   displayNumber.text(result);
-  currentNumber = 0;
+  currentNumber = "";
   operator = "";
 });
 
-addition.click(function(e) {
+addition.click(function (e) {
   e.preventDefault();
   performCalculation("+");
 });
 
-subtraction.click(function(e) {
+subtraction.click(function (e) {
   e.preventDefault();
   performCalculation("-");
 });
 
-multiplication.click(function(e) {
+multiplication.click(function (e) {
   e.preventDefault();
   performCalculation("x");
 });
 
-division.click(function(e) {
+division.click(function (e) {
   e.preventDefault();
   performCalculation("/");
 });
 
 function performCalculation(op) {
   counterSome();
-  currentNumber = 0;
+  currentNumber = "";
   operator = op;
 }
 
 function counterSome() {
-  if (result !== 0 && currentNumber !== 0) {
+  if (result !== "" && currentNumber !== "") {
     if (operator === "+") {
-      result += currentNumber;
+      result = Number(result) + Number(currentNumber);
     } else if (operator === "-") {
-      result -= currentNumber;
+      result = Number(result) - Number(currentNumber);
     } else if (operator === "x") {
-      result *= currentNumber;
+      result = Number(result) * Number(currentNumber);
     } else if (operator === "/") {
-      result /= currentNumber;
+      result = Number(result) / Number(currentNumber);
     }
     displayNumber.text(result);
-  } else if (result === 0) {
-    result = currentNumber;
+  } else if (result === "") {
+    result = Number(currentNumber);
     displayNumber.text(result);
   }
 }
 
-function equalCalcualtions() {
-  if (operator && currentNumber !== 0) {
+function equalCalculations() {
+  if (operator && currentNumber !== "") {
     if (operator === "+") {
-      result += currentNumber;
+      result = Number(result) + Number(currentNumber);
     } else if (operator === "-") {
-      result -= currentNumber;
+      result = Number(result) - Number(currentNumber);
     } else if (operator === "x") {
-      result *= currentNumber;
+      result = Number(result) * Number(currentNumber);
     } else if (operator === "/") {
-      result /= currentNumber;
+      result = Number(result) / Number(currentNumber);
     }
-  } else if (result === 0) {
+  } else if (result === "") {
     result = currentNumber;
   }
 }
 
-clear.click(function (e) { 
-    e.preventDefault();
-    currentNumber = 0;
-    result = 0;
-    operator = "";
-    displayNumber.text("0");
-});
-
-decimal.click(function (e) {
+clear.click(function (e) {
   e.preventDefault();
-  
-
+  currentNumber = "";
+  result = "";
+  operator = "";
+  displayNumber.text("0");
+  displayNumber.css('font-size', '70px');
 });
 
-percent.click(function (e) {
+
+$("#del").click(function (e) {
   e.preventDefault();
-  console.log(result + " vysledek");
-  console.log(currentNumber + " psane");
+
+  if (currentNumber.length > 0) {
+    currentNumber = currentNumber.slice(0, -1);
+    displayNumber.text(currentNumber);
+  }
 });
+
+$("#sign").click(function (e) {
+  e.preventDefault();
+
+  if (currentNumber !== "") {
+    isNegative = !isNegative;
+    currentNumber = isNegative ? "-" + currentNumber : currentNumber.replace("-", "");
+    displayNumber.text(currentNumber);
+  }
+});
+
