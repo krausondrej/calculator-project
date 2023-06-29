@@ -52,7 +52,7 @@ decimal.click(function (e) {
   if (!currentNumber.includes('.') && currentNumber !== "") {
     currentNumber += '.';
     displayNumber.text(currentNumber);
-    }
+  }
 });
 
 equal.click(function (e) {
