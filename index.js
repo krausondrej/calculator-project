@@ -29,28 +29,44 @@ let currentNumber = "";
 let isNegative = false;
 
 numberButtons.forEach((button, index) => {
-  button.click(function (e) {
+  $(button).click(function (e) {
     e.preventDefault();
     if (operator === "") {
-      result = ""
+      result = "";
     }
+
     if (currentNumber.length < 9) {
       currentNumber += index;
-      displayNumber.text(currentNumber);
-
-      if (currentNumber.length > 6) {
-        displayNumber.css('font-size', '60px');
-      } else if (currentNumber.length < 6) {
-        displayNumber.css('font-size', '70px');
-      }
     }
+    displayNumber.text(currentNumber);
   });
 });
+
+$(document).keydown(function (e) {
+  const keyPressed = e.which;
+  const numberKeys = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
+  const keyIndex = numberKeys.indexOf(keyPressed);
+
+  if (keyIndex !== -1 && currentNumber.length < 9) {
+    e.preventDefault();
+    if (operator === "") {
+      result = "";
+    }
+
+    currentNumber += keyIndex.toString();
+    displayNumber.text(currentNumber);
+  }
+});
+
+
 
 decimal.click(function (e) {
   e.preventDefault();
   if (!currentNumber.includes('.') && currentNumber !== "") {
     currentNumber += '.';
+    displayNumber.text(currentNumber);
+  } else {
+    currentNumber += '0.';
     displayNumber.text(currentNumber);
   }
 });
@@ -100,9 +116,14 @@ function counterSome() {
     } else if (operator === "/") {
       result = Number(result) / Number(currentNumber);
     }
+    if (result % 1 === 0) {
+      result = result.toString();
+    } else {
+      result = result.toFixed(3);
+    }
     displayNumber.text(result);
   } else if (result === "") {
-    result = Number(currentNumber);
+    result = currentNumber;
     displayNumber.text(result);
   }
 }
@@ -118,10 +139,19 @@ function equalCalculations() {
     } else if (operator === "/") {
       result = Number(result) / Number(currentNumber);
     }
+
+    if (result % 1 === 0) {
+      result = result.toString();
+    } else {
+      result = convertToExponential(result)
+      console.log(result);
+      result = result.toFixed(3);
+    }
   } else if (result === "") {
     result = currentNumber;
   }
 }
+
 
 clear.click(function (e) {
   e.preventDefault();
@@ -132,7 +162,6 @@ clear.click(function (e) {
   displayNumber.text("0");
   displayNumber.css('font-size', '70px');
 });
-
 
 $("#del").click(function (e) {
   e.preventDefault();
@@ -147,15 +176,18 @@ $("#sign").click(function (e) {
   e.preventDefault();
 
   if (currentNumber !== "") {
-    currentNumber = -1 * currentNumber
+    currentNumber = negateNumber(currentNumber);
     displayNumber.text(currentNumber);
   }
   if (result !== "") {
-    result = -1 * result
+    result = negateNumber(result);
     displayNumber.text(result);
   }
 });
 
+function negateNumber(number) {
+  return (parseFloat(number) * -1).toString();
+}
 
 
 
