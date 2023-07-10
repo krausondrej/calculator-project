@@ -20,6 +20,10 @@
     color: rgb(76, 118, 172);
 }
 
+.name-nav span {
+    color: rgb(132, 157, 190);
+}
+
 .calculator-body {
     width: 400px;
     height: 600px;

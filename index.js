@@ -45,15 +45,24 @@ numberButtons.forEach((button, index) => {
 $(document).keydown(function (e) {
   const keyPressed = e.which;
   const numberKeys = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
+  const numpadKeys = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
   const keyIndex = numberKeys.indexOf(keyPressed);
+  const numpadIndex = numpadKeys.indexOf(keyPressed);
 
-  if (keyIndex !== -1 && currentNumber.length < 9) {
+  if (keyIndex !== -1 || numpadIndex !== -1 && currentNumber.length < 9) {
     e.preventDefault();
     if (operator === "") {
       result = "";
     }
 
-    currentNumber += keyIndex.toString();
+    let digit = "";
+    if (keyIndex !== -1 && currentNumber.length < 9) {
+      digit = keyIndex.toString();
+    } else {
+      digit = numpadIndex.toString();
+    }
+
+    currentNumber += digit;
     displayNumber.text(currentNumber);
   }
 });
@@ -74,6 +83,7 @@ equal.click(function (e) {
   equalCalculations();
   currentNumber = "";
   operator = "";
+  $(".color-change").removeClass("blue-background");
 });
 
 addition.click(function (e) {
@@ -114,7 +124,6 @@ $(document).click(function(e) {
   }
 });
 
-
 clear.click(function (e) {
   e.preventDefault();
   currentNumber = "";
@@ -122,6 +131,7 @@ clear.click(function (e) {
   operator = "";
   displayNumber.text("0");
   displayNumber.css('font-size', '70px');
+  $(".color-change").removeClass("blue-background");
 });
 
 sign.click(function (e) {
@@ -145,7 +155,6 @@ del.click(function (e) {
     displayNumber.text(currentNumber);
   }
 });
-
 
 function performCalculation(op) {
   counterSome();
