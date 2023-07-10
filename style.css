@@ -9,7 +9,6 @@
     justify-content: center;
     align-items: center;
     height: 15vh;
-
 }
 
 .wrapper {
@@ -18,7 +17,7 @@
 
 .name-nav {
     font-size: 50px;
-
+    color: rgb(76, 118, 172);
 }
 
 .calculator-body {
@@ -33,7 +32,7 @@
 }
 
 .first-page {
-    height: 100vh;
+    height: 80vh;
 }
 
 .container {
@@ -93,5 +92,9 @@
 
 .color-change {
     background-color: rgb(137, 169, 211);
+}
+
+.blue-background {
+    background-color: rgb(91, 131, 196);
 }
 

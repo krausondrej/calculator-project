@@ -16,6 +16,8 @@ const decimal = $("#decimal");
 const multiplication = $("#multiplication");
 const division = $("#division");
 const displayNumber = $(".number-display-some");
+const sign = $("#sign");
+const del = $("#del");
 
 const numberButtons = [
   zero, numberOne, numberTwo, numberThree,
@@ -26,7 +28,6 @@ const numberButtons = [
 let operator = "";
 let result = "";
 let currentNumber = "";
-let isNegative = false;
 
 numberButtons.forEach((button, index) => {
   $(button).click(function (e) {
@@ -34,7 +35,6 @@ numberButtons.forEach((button, index) => {
     if (operator === "") {
       result = "";
     }
-
     if (currentNumber.length < 9) {
       currentNumber += index;
     }
@@ -58,14 +58,12 @@ $(document).keydown(function (e) {
   }
 });
 
-
-
 decimal.click(function (e) {
   e.preventDefault();
   if (!currentNumber.includes('.') && currentNumber !== "") {
     currentNumber += '.';
     displayNumber.text(currentNumber);
-  } else {
+  } else if (currentNumber === "") {
     currentNumber += '0.';
     displayNumber.text(currentNumber);
   }
@@ -74,7 +72,6 @@ decimal.click(function (e) {
 equal.click(function (e) {
   e.preventDefault();
   equalCalculations();
-  displayNumber.text(result);
   currentNumber = "";
   operator = "";
 });
@@ -82,22 +79,73 @@ equal.click(function (e) {
 addition.click(function (e) {
   e.preventDefault();
   performCalculation("+");
+  
+  addition.addClass("blue-background");
+  $(".color-change").not(addition).removeClass("blue-background");
 });
 
-subtraction.click(function (e) {
+subtraction.click(function(e) {
   e.preventDefault();
   performCalculation("-");
+
+  subtraction.addClass("blue-background");
+  $(".color-change").not(subtraction).removeClass("blue-background");
 });
 
-multiplication.click(function (e) {
+multiplication.click(function(e) {
   e.preventDefault();
   performCalculation("x");
+
+  multiplication.addClass("blue-background");
+  $(".color-change").not(multiplication).removeClass("blue-background");
 });
 
-division.click(function (e) {
+division.click(function(e) {
   e.preventDefault();
   performCalculation("/");
+
+  division.addClass("blue-background");
+  $(".color-change").not(division).removeClass("blue-background");
 });
+
+$(document).click(function(e) {
+  if (!$(e.target).closest(".color-change").length) {
+    $(".color-change").removeClass("blue-background");
+  }
+});
+
+
+clear.click(function (e) {
+  e.preventDefault();
+  currentNumber = "";
+  result = "";
+  operator = "";
+  displayNumber.text("0");
+  displayNumber.css('font-size', '70px');
+});
+
+sign.click(function (e) {
+  e.preventDefault();
+
+  if (currentNumber !== "") {
+    currentNumber = (parseFloat(currentNumber) * -1).toString();
+    displayNumber.text(currentNumber);
+  }
+  if (result !== "" && currentNumber === "") {
+    result = (parseFloat(result) * -1).toString();
+    displayNumber.text(result);
+  }
+});
+
+del.click(function (e) {
+  e.preventDefault();
+
+  if (currentNumber.length > 0) {
+    currentNumber = currentNumber.slice(0, -1);
+    displayNumber.text(currentNumber);
+  }
+});
+
 
 function performCalculation(op) {
   counterSome();
@@ -116,12 +164,16 @@ function counterSome() {
     } else if (operator === "/") {
       result = Number(result) / Number(currentNumber);
     }
-    if (result % 1 === 0) {
-      result = result.toString();
+
+    if (result >= 1000000000) {
+      if (result % 1000000000 === 0) {
+        displayNumber.text((result / 1000000000).toFixed(1) + "e" + (Math.log10(result) + 9));
+      } else {
+        displayNumber.text(result.toExponential(1));
+      }
     } else {
-      result = result.toFixed(3);
+      displayNumber.text(result.toString());
     }
-    displayNumber.text(result);
   } else if (result === "") {
     result = currentNumber;
     displayNumber.text(result);
@@ -140,54 +192,23 @@ function equalCalculations() {
       result = Number(result) / Number(currentNumber);
     }
 
-    if (result % 1 === 0) {
-      result = result.toString();
+    if (result >= 1000000000) {
+      if (result % 1000000000 === 0) {
+        displayNumber.text((result / 1000000000).toFixed(1) + "e" + (Math.log10(result) + 9));
+      } else {
+        displayNumber.text(result.toExponential(1));
+      }
     } else {
-      result = convertToExponential(result)
-      console.log(result);
-      result = result.toFixed(3);
+      result = result.toString();
+      displayNumber.text(result);
     }
+
   } else if (result === "") {
     result = currentNumber;
   }
 }
 
 
-clear.click(function (e) {
-  e.preventDefault();
-  
-  currentNumber = "";
-  result = "";
-  operator = "";
-  displayNumber.text("0");
-  displayNumber.css('font-size', '70px');
-});
-
-$("#del").click(function (e) {
-  e.preventDefault();
-
-  if (currentNumber.length > 0) {
-    currentNumber = currentNumber.slice(0, -1);
-    displayNumber.text(currentNumber);
-  }
-});
-
-$("#sign").click(function (e) {
-  e.preventDefault();
-
-  if (currentNumber !== "") {
-    currentNumber = negateNumber(currentNumber);
-    displayNumber.text(currentNumber);
-  }
-  if (result !== "") {
-    result = negateNumber(result);
-    displayNumber.text(result);
-  }
-});
-
-function negateNumber(number) {
-  return (parseFloat(number) * -1).toString();
-}
 
 
 
