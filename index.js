@@ -65,6 +65,39 @@ $(document).keydown(function (e) {
     currentNumber += digit;
     displayNumber.text(currentNumber);
   }
+
+  var key = e.keyCode || e.which;
+  if (key === 107) {
+    e.preventDefault();
+    performCalculation("+");
+    addition.addClass("blue-background");
+    $(".color-change").not(addition).removeClass("blue-background");
+  }
+  if (key === 109) {
+    e.preventDefault();
+    performCalculation("-");
+    subtraction.addClass("blue-background");
+    $(".color-change").not(subtraction).removeClass("blue-background");
+  }
+  if (key === 106) {
+    e.preventDefault();
+    performCalculation("x");
+    multiplication.addClass("blue-background");
+    $(".color-change").not(multiplication).removeClass("blue-background");
+  }
+  if (key === 111) {
+    e.preventDefault();
+    performCalculation("/");
+    division.addClass("blue-background");
+    $(".color-change").not(division).removeClass("blue-background");
+  }
+  if (key === 13) {
+    e.preventDefault();
+    equalCalculations();
+    currentNumber = "";
+    operator = "";
+    $(".color-change").removeClass("blue-background");
+  }
 });
 
 decimal.click(function (e) {
@@ -113,7 +146,6 @@ multiplication.click(function(e) {
 division.click(function(e) {
   e.preventDefault();
   performCalculation("/");
-
   division.addClass("blue-background");
   $(".color-change").not(division).removeClass("blue-background");
 });
