@@ -9,6 +9,7 @@
     justify-content: center;
     align-items: center;
     height: 15vh;
+    width: 100%;
 }
 
 .wrapper {
@@ -35,8 +36,8 @@
 
 }
 
-.first-page {
-    height: 80vh;
+.body {
+    height: 100vh;
 }
 
 .container {

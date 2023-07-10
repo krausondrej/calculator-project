@@ -67,6 +67,7 @@ $(document).keydown(function (e) {
   }
 
   var key = e.keyCode || e.which;
+  console.log(key);
   if (key === 107) {
     e.preventDefault();
     performCalculation("+");
@@ -97,6 +98,23 @@ $(document).keydown(function (e) {
     currentNumber = "";
     operator = "";
     $(".color-change").removeClass("blue-background");
+  }
+  if (key === 110) {
+    e.preventDefault();
+    if (!currentNumber.includes('.') && currentNumber !== "") {
+      currentNumber += '.';
+      displayNumber.text(currentNumber);
+    } else if (currentNumber === "") {
+      currentNumber += '0.';
+      displayNumber.text(currentNumber);
+    }
+  }
+  if (key === 8) {
+    e.preventDefault();
+    if (currentNumber.length > 0) {
+      currentNumber = currentNumber.slice(0, -1);
+      displayNumber.text(currentNumber);
+    }
   }
 });
 
@@ -168,7 +186,6 @@ clear.click(function (e) {
 
 sign.click(function (e) {
   e.preventDefault();
-
   if (currentNumber !== "") {
     currentNumber = (parseFloat(currentNumber) * -1).toString();
     displayNumber.text(currentNumber);
@@ -181,7 +198,6 @@ sign.click(function (e) {
 
 del.click(function (e) {
   e.preventDefault();
-
   if (currentNumber.length > 0) {
     currentNumber = currentNumber.slice(0, -1);
     displayNumber.text(currentNumber);
