@@ -28,6 +28,7 @@ const numberButtons = [
 let operator = "";
 let result = "";
 let currentNumber = "";
+let tlacitko = false;
 
 numberButtons.forEach((button, index) => {
   $(button).click(function (e) {
@@ -38,7 +39,7 @@ numberButtons.forEach((button, index) => {
     if (currentNumber.length < 9) {
       currentNumber += index;
     }
-    displayNumber.text(currentNumber);
+    displayNumber.text(parseFloat(currentNumber).toLocaleString());
   });
 });
 
@@ -57,75 +58,83 @@ $(document).keydown(function (e) {
 
     let digit = "";
     if (keyIndex !== -1 && currentNumber.length < 9) {
-      digit = keyIndex.toString();
+      digit = keyIndex.toLocaleString();
     } else {
-      digit = numpadIndex.toString();
+      digit = numpadIndex.toLocaleString();
     }
 
     currentNumber += digit;
-    displayNumber.text(currentNumber);
+    displayNumber.text(parseFloat(currentNumber).toLocaleString());
   }
 
-  var key = e.keyCode || e.which;
-  console.log(key);
-  if (key === 107) {
+  if (keyPressed === 107) {
     e.preventDefault();
     performCalculation("+");
     addition.addClass("blue-background");
     $(".color-change").not(addition).removeClass("blue-background");
   }
-  if (key === 109) {
+  if (keyPressed === 109) {
     e.preventDefault();
     performCalculation("-");
     subtraction.addClass("blue-background");
     $(".color-change").not(subtraction).removeClass("blue-background");
   }
-  if (key === 106) {
+  if (keyPressed === 106) {
     e.preventDefault();
     performCalculation("x");
     multiplication.addClass("blue-background");
     $(".color-change").not(multiplication).removeClass("blue-background");
   }
-  if (key === 111) {
+  if (keyPressed === 111) {
     e.preventDefault();
     performCalculation("/");
     division.addClass("blue-background");
     $(".color-change").not(division).removeClass("blue-background");
   }
-  if (key === 13) {
+  if (keyPressed === 13) {
     e.preventDefault();
     equalCalculations();
     currentNumber = "";
     operator = "";
     $(".color-change").removeClass("blue-background");
   }
-  if (key === 110) {
+  if (keyPressed === 110) {
     e.preventDefault();
     if (!currentNumber.includes('.') && currentNumber !== "") {
       currentNumber += '.';
-      displayNumber.text(currentNumber);
+      displayNumber.text(parseFloat(currentNumber).toLocaleString());
     } else if (currentNumber === "") {
       currentNumber += '0.';
-      displayNumber.text(currentNumber);
+      displayNumber.text(parseFloat(currentNumber).toLocaleString());
     }
   }
-  if (key === 8) {
+  if (keyPressed === 8) {
     e.preventDefault();
     if (currentNumber.length > 0) {
       currentNumber = currentNumber.slice(0, -1);
-      displayNumber.text(currentNumber);
+      displayNumber.text(parseFloat(currentNumber).toLocaleString());
+    }
+  }
+  if (keyPressed === 110) {
+    e.preventDefault();
+    if (!currentNumber.includes(".") && currentNumber !== "") {
+      currentNumber += ".";
+      displayNumber.text(parseFloat(currentNumber).toLocaleString() + ",");
+    } else if (currentNumber === "") {
+      currentNumber += "0.";
+      displayNumber.text("0,");
     }
   }
 });
 
-decimal.click(function (e) {
+decimal.click(function(e) {
   e.preventDefault();
-  if (!currentNumber.includes('.') && currentNumber !== "") {
-    currentNumber += '.';
-    displayNumber.text(currentNumber);
+  if (!currentNumber.includes(".") && currentNumber !== "") {
+    currentNumber += ".";
+    displayNumber.text(parseFloat(currentNumber).toLocaleString() + ",");
   } else if (currentNumber === "") {
-    currentNumber += '0.';
-    displayNumber.text(currentNumber);
+    currentNumber += "0.";
+    displayNumber.text("0,");
   }
 });
 
@@ -140,7 +149,6 @@ equal.click(function (e) {
 addition.click(function (e) {
   e.preventDefault();
   performCalculation("+");
-  
   addition.addClass("blue-background");
   $(".color-change").not(addition).removeClass("blue-background");
 });
@@ -148,7 +156,6 @@ addition.click(function (e) {
 subtraction.click(function(e) {
   e.preventDefault();
   performCalculation("-");
-
   subtraction.addClass("blue-background");
   $(".color-change").not(subtraction).removeClass("blue-background");
 });
@@ -156,7 +163,6 @@ subtraction.click(function(e) {
 multiplication.click(function(e) {
   e.preventDefault();
   performCalculation("x");
-
   multiplication.addClass("blue-background");
   $(".color-change").not(multiplication).removeClass("blue-background");
 });
@@ -172,6 +178,7 @@ $(document).click(function(e) {
   if (!$(e.target).closest(".color-change").length) {
     $(".color-change").removeClass("blue-background");
   }
+  console.log(currentNumber);
 });
 
 clear.click(function (e) {
@@ -180,7 +187,6 @@ clear.click(function (e) {
   result = "";
   operator = "";
   displayNumber.text("0");
-  displayNumber.css('font-size', '70px');
   $(".color-change").removeClass("blue-background");
 });
 
@@ -188,21 +194,27 @@ sign.click(function (e) {
   e.preventDefault();
   if (currentNumber !== "") {
     currentNumber = (parseFloat(currentNumber) * -1).toString();
-    displayNumber.text(currentNumber);
+    displayNumber.text(parseFloat(currentNumber).toLocaleString());
   }
   if (result !== "" && currentNumber === "") {
     result = (parseFloat(result) * -1).toString();
-    displayNumber.text(result);
+    displayNumber.text(parseFloat(result).toLocaleString());
   }
 });
 
-del.click(function (e) {
+del.click(function(e) {
   e.preventDefault();
-  if (currentNumber.length > 0) {
+  if (currentNumber.length > 1) {
     currentNumber = currentNumber.slice(0, -1);
-    displayNumber.text(currentNumber);
+    displayNumber.text(parseFloat(currentNumber).toLocaleString());
+  } else if (currentNumber.length === 1) {
+    currentNumber = "";
+    displayNumber.text("0");
+  } else {
+    return;
   }
 });
+
 
 function performCalculation(op) {
   counterSome();
@@ -222,18 +234,15 @@ function counterSome() {
       result = Number(result) / Number(currentNumber);
     }
 
-    if (result >= 1000000000) {
-      if (result % 1000000000 === 0) {
-        displayNumber.text((result / 1000000000).toFixed(1) + "e" + (Math.log10(result) + 9));
-      } else {
-        displayNumber.text(result.toExponential(1));
-      }
+    if (result >= 1e9) {
+      const power = Math.floor(Math.log10(result));
+      displayNumber.text((result / Math.pow(10, power)).toFixed(1) + "e" + power);
     } else {
-      displayNumber.text(result.toString());
+      displayNumber.text(result.toLocaleString());
     }
   } else if (result === "") {
     result = currentNumber;
-    displayNumber.text(result);
+    displayNumber.text(parseFloat(currentNumber).toLocaleString());
   }
 }
 
@@ -249,17 +258,12 @@ function equalCalculations() {
       result = Number(result) / Number(currentNumber);
     }
 
-    if (result >= 1000000000) {
-      if (result % 1000000000 === 0) {
-        displayNumber.text((result / 1000000000).toFixed(1) + "e" + (Math.log10(result) + 9));
-      } else {
-        displayNumber.text(result.toExponential(1));
-      }
+    if (result >= 1e9) {
+      const power = Math.floor(Math.log10(result));
+      displayNumber.text((result / Math.pow(10, power)).toFixed(1) + "e" + power);
     } else {
-      result = result.toString();
-      displayNumber.text(result);
+      displayNumber.text(result.toLocaleString());
     }
-
   } else if (result === "") {
     result = currentNumber;
   }
