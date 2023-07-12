@@ -127,6 +127,12 @@ $(document).keydown(function (e) {
   }
 });
 
+$(document).click(function(e) {
+  if (!$(e.target).closest(".color-change").length) {
+    $(".color-change").removeClass("blue-background");
+  }
+});
+
 decimal.click(function(e) {
   e.preventDefault();
   if (!currentNumber.includes(".") && currentNumber !== "") {
@@ -170,12 +176,6 @@ division.click(function(e) {
   performCalculation("/");
   division.addClass("blue-background");
   $(".color-change").not(division).removeClass("blue-background");
-});
-
-$(document).click(function(e) {
-  if (!$(e.target).closest(".color-change").length) {
-    $(".color-change").removeClass("blue-background");
-  }
 });
 
 clear.click(function (e) {
