@@ -141,8 +141,6 @@ decimal.click(function(e) {
 equal.click(function (e) {
   e.preventDefault();
   equalCalculations();
-  currentNumber = "";
-  operator = "";
   $(".color-change").removeClass("blue-background");
 });
 
@@ -178,7 +176,6 @@ $(document).click(function(e) {
   if (!$(e.target).closest(".color-change").length) {
     $(".color-change").removeClass("blue-background");
   }
-  console.log(currentNumber);
 });
 
 clear.click(function (e) {
@@ -214,7 +211,6 @@ del.click(function(e) {
     return;
   }
 });
-
 
 function performCalculation(op) {
   counterSome();
@@ -257,7 +253,6 @@ function equalCalculations() {
     } else if (operator === "/") {
       result = Number(result) / Number(currentNumber);
     }
-
     if (result >= 1e9) {
       const power = Math.floor(Math.log10(result));
       displayNumber.text((result / Math.pow(10, power)).toFixed(1) + "e" + power);
@@ -267,6 +262,8 @@ function equalCalculations() {
   } else if (result === "") {
     result = currentNumber;
   }
+  currentNumber = ""
+  operator = "";
 }
 
 
